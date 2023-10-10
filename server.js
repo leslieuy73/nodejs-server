@@ -9,13 +9,13 @@ app.use(cors());
 
 const port = process.env.PORT;
 const apiUrl = process.env.API_URL;
-app.get('/api/datasheet/:id', (req, res) => {
+app.get(`${apiUrl}api/datasheet/viewDataSheet`, (req, res) => {
   try {
     // Create a new Curl instance for each request
     const curlTest = new Curl();
 
     // Configure the Curl request
-    curlTest.setOpt(Curl.option.URL, `${apiUrl}datasheet/viewDataSheet?id=${req.params.id}`); // Replace with your API URL
+    curlTest.setOpt(Curl.option.URL, `${apiUrl}/api/datasheet/viewDataSheet`); // Replace with your API URL
     //curlTest.setOpt(Curl.option.HTTPHEADER, ['Content-Type: application/json']);
 
     // Set up response handling
