@@ -216,8 +216,6 @@ app.post('/api/item/updateItems', async (req, res) => {
   // }
 
   const _data = req.body;
-  _data.id = 1
-  _data.categoryId = 1
   
   const { statusCode, data, headers } = await curly.post(`${apiUrl}/api/item/updateItems`, {
     postFields: JSON.stringify([_data]),
@@ -227,9 +225,102 @@ app.post('/api/item/updateItems', async (req, res) => {
     ],
   })
   console.log(data)
-  console.log(statusCode)
-  console.log(headers)
-  console.log(req.body)
+});
+
+app.get('/api/datasheet/search', (req, res) => {
+  try {
+    // Create a new Curl instance for each request
+    const curlTest = new Curl();
+    const queryKeys = Object.keys(req.query);
+    // Configure the Curl request
+    let queryCombinations = "";
+
+    queryKeys.map(k => {
+      queryCombinations += `${(queryCombinations !== "" ? "&" : "")}${k}=${req.query[k]}`
+    })
+    curlTest.setOpt(Curl.option.URL, `${apiUrl}/api/datasheet/search?${queryCombinations}`); // Replace with your API URL
+    //curlTest.setOpt(Curl.option.HTTPHEADER, ['Content-Type: application/json']);
+
+    // Set up response handling
+    curlTest.on('end', function (statusCode, data, headers) {
+      // console.info('Response status code: ' + statusCode);
+      // console.info('Response data: ' + data);
+    
+      if (statusCode === 200) {
+        // Send the API response to the client
+        res.status(200).json(JSON.parse(data));
+      } else {
+        // Handle other status codes as needed
+        res.status(statusCode).json({ error: 'API request failed' });
+      }
+
+      // Close the Curl instance
+      curlTest.close();
+    });
+
+    // Handle Curl request errors
+    curlTest.on('error', function (error) {
+      console.error('Curl error: ' + error);
+      res.status(500).json({ error: 'An error occurred while accessing the API.' });
+
+      // Close the Curl instance
+      curlTest.close();
+    });
+
+    // Perform the Curl request
+    curlTest.perform();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while accessing the API.' });
+  }
+});
+
+app.get('/api/item/viewAllItems', (req, res) => {
+  try {
+    // Create a new Curl instance for each request
+    const curlTest = new Curl();
+    const queryKeys = Object.keys(req.query);
+    // Configure the Curl request
+    let queryCombinations = "";
+
+    queryKeys.map(k => {
+      queryCombinations += `${(queryCombinations !== "" ? "&" : "")}${k}=${req.query[k]}`
+    })
+    curlTest.setOpt(Curl.option.URL, `${apiUrl}/api/item/viewAllItems?${queryCombinations}`); // Replace with your API URL
+    //curlTest.setOpt(Curl.option.HTTPHEADER, ['Content-Type: application/json']);
+
+    // Set up response handling
+    curlTest.on('end', function (statusCode, data, headers) {
+      // console.info('Response status code: ' + statusCode);
+      // console.info('Response data: ' + data);
+    
+      if (statusCode === 200) {
+        // Send the API response to the client
+        res.status(200).json(JSON.parse(data));
+      } else {
+        // Handle other status codes as needed
+        res.status(statusCode).json({ error: 'API request failed' });
+      }
+
+      // Close the Curl instance
+      curlTest.close();
+    });
+
+    // Handle Curl request errors
+    curlTest.on('error', function (error) {
+      console.error('Curl error: ' + error);
+      res.status(500).json({ error: 'An error occurred while accessing the API.' });
+
+      // Close the Curl instance
+      curlTest.close();
+    });
+
+    // Perform the Curl request
+    curlTest.perform();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occurred while accessing the API.' });
+  }
 });
 
 app.listen(port, () => {
